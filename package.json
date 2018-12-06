@@ -1,0 +1,41 @@
+{
+  "name": "user-service",
+  "version": "1.0.0",
+  "description": "Serverless CRUD service exposing a REST HTTP interface for users",
+  "author": "Tanner Rigby",
+  "license": "MIT",
+  "scripts": {
+    "deploy-dev": "serverless --stage dev deploy",
+    "deploy-prod": "serverless --stage prod deploy",
+    "start": "serverless --stage dev offline start"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
+    "aws-sdk": "^2.263.1",
+    "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0",
+    "bcryptjs": "^2.4.3",
+    "jwt-simple": "^0.5.1",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "source-map-support": "^0.5.6",
+    "uuid": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-source-map-support": "^2.0.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^5.7.0",
+    "eslint-plugin-jest": "^21.25.1",
+    "serverless-domain-manager": "^2.4.0",
+    "serverless-offline": "^3.31.3",
+    "serverless-plugin-warmup": "^4.0.0-rc.1",
+    "serverless-webpack": "^5.2.0",
+    "webpack": "^4.12.1",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

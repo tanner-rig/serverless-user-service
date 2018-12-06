@@ -1,0 +1,7 @@
+node_modules
+.serverless
+.env
+.webpack
+.idea
+.DS_Store
+serverless.env.yml

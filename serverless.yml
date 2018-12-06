@@ -1,0 +1,118 @@
+service: user-service
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+  - serverless-plugin-warmup
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
+    packager: 'npm'
+
+  customDomain:
+    certificateName: ${file(./serverless.env.yml):${self:provider.stage}.CERTIFICATE_NAME}
+    domainName: ${file(./serverless.env.yml):${self:provider.stage}.DOMAIN_NAME}
+    basePath: 'users'
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+  warmup:
+    default: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: ${file(./serverless.env.yml):${self:provider.stage}.AWS_REGION}
+  profile: ${file(./serverless.env.yml):${self:provider.stage}.SERVERLESS_ADMIN}
+  timeout: 30
+  environment:
+    DYNAMO_USERS_TABLE: ${file(./serverless.env.yml):${self:provider.stage}.DYNAMO_USERS_TABLE}
+    REGION: ${self:provider.region}
+    SENDGRID_API_KEY: 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
+    STAGE: ${self:provider.stage}
+    DASHBOARD_URI: ${file(./serverless.env.yml):${self:provider.stage}.DASHBOARD_URI}
+    SERVICE_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SERVICE_API_KEY}
+    JWT_SECRET: ${file(./serverless.env.yml):${self:provider.stage}.JWT_SECRET}
+    API_URL: ${file(./serverless.env.yml):${self:provider.stage}.API_URL}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMO_USERS_TABLE}*"
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+      - Fn::Join:
+        - ':'
+        - - arn:aws:lambda
+          - Ref: AWS::Region
+          - Ref: AWS::AccountId
+          - function:${self:service}-${self:provider.stage}-*
+
+functions:
+  createUser:
+    handler: functions/createUser.main
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+
+  deleteUser:
+    handler: functions/deleteUser.main
+    events:
+      - http:
+          path: /{userId}
+          method: delete
+          cors: true
+
+  forgotUserPassword:
+    handler: functions/forgotUserPassword.main
+    events:
+      - http:
+          path: /password/forgot
+          method: post
+          cors: true
+
+  getUser:
+    handler: functions/getUser.main
+    events:
+      - http:
+          path: /user
+          method: get
+          cors: true
+
+  loginUser:
+    handler: functions/loginUser.main
+    events:
+      - http:
+          path: /login
+          method: post
+          cors: true
+
+  resetUserPassword:
+    handler: functions/resetUserPassword.main
+    events:
+      - http:
+          path: /password/reset
+          method: put
+          cors: true
+
+  updateUser:
+    handler: functions/updateUser.main
+    events:
+      - http:
+          path: /{userId}
+          method: put
+          cors: true
