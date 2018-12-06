@@ -34,7 +34,6 @@ provider:
   environment:
     DYNAMO_USERS_TABLE: ${file(./serverless.env.yml):${self:provider.stage}.DYNAMO_USERS_TABLE}
     REGION: ${self:provider.region}
-    SENDGRID_API_KEY: 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
     STAGE: ${self:provider.stage}
     DASHBOARD_URI: ${file(./serverless.env.yml):${self:provider.stage}.DASHBOARD_URI}
     SERVICE_API_KEY: ${file(./serverless.env.yml):${self:provider.stage}.SERVICE_API_KEY}
