@@ -1,4 +1,4 @@
-# route-user-service
+# user-service
 Serverless CRUD service exposing a REST HTTP interface for users
 
 Running Locally
